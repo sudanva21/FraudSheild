@@ -1,0 +1,70 @@
+# Page snapshot
+
+```yaml
+- generic [active]:
+  - alert [ref=e1]
+  - dialog [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - heading "Build Error" [level=1] [ref=e7]
+        - paragraph [ref=e8]: Failed to compile
+        - generic [ref=e9]:
+          - generic "An outdated version detected (latest is 15.5.4), upgrade is highly recommended!" [ref=e11]: Next.js (14.2.33) is outdated
+          - link "(learn more)" [ref=e12]:
+            - /url: https://nextjs.org/docs/messages/version-staleness
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - link "./src/components/3d/floating-elements.tsx:4:1" [ref=e15] [cursor=pointer]:
+            - text: ./src/components/3d/floating-elements.tsx:4:1
+            - img [ref=e16] [cursor=pointer]
+          - generic [ref=e20]:
+            - generic [ref=e21]: Module not found
+            - generic [ref=e22]: ": Can't resolve '"
+            - generic [ref=e23]: "@react-three/fiber"
+            - generic [ref=e24]: "'"
+            - generic [ref=e26]: 2 |
+            - generic [ref=e28]: 3 |
+            - generic [ref=e30]: import
+            - generic [ref=e31]: "{ useRef"
+            - generic [ref=e32]: ","
+            - generic [ref=e33]: useEffect
+            - generic [ref=e34]: ","
+            - generic [ref=e35]: "useState }"
+            - generic [ref=e36]: from
+            - generic [ref=e38]: "'react'"
+            - generic [ref=e39]: ">"
+            - generic [ref=e40]: 4 |
+            - generic [ref=e42]: import
+            - generic [ref=e43]: "{"
+            - generic [ref=e44]: Canvas
+            - generic [ref=e45]: ","
+            - generic [ref=e46]: "useFrame }"
+            - generic [ref=e47]: from
+            - generic [ref=e49]: "'@react-three/fiber'"
+            - generic [ref=e51]: "|"
+            - generic [ref=e53]: ^
+            - generic [ref=e55]: 5 |
+            - generic [ref=e57]: import
+            - generic [ref=e58]: "{"
+            - generic [ref=e59]: Sphere
+            - generic [ref=e60]: ","
+            - generic [ref=e62]: Box
+            - generic [ref=e63]: ","
+            - generic [ref=e65]: Octahedron
+            - generic [ref=e66]: "}"
+            - generic [ref=e67]: from
+            - generic [ref=e69]: "'@react-three/drei'"
+            - generic [ref=e71]: 6 |
+            - generic [ref=e73]: import
+            - generic [ref=e75]: "*"
+            - generic [ref=e77]: as
+            - generic [ref=e79]: THREE
+            - generic [ref=e81]: from
+            - generic [ref=e83]: "'three'"
+            - generic [ref=e85]: 7 |
+            - link "https://nextjs.org/docs/messages/module-not-found" [ref=e87]:
+              - /url: https://nextjs.org/docs/messages/module-not-found
+        - contentinfo [ref=e88]:
+          - paragraph [ref=e89]:
+            - generic [ref=e90]: This error occurred during the build process and can only be dismissed by fixing the error.
+```

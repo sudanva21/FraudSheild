@@ -1,0 +1,45 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "FraudShield" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - img [ref=e10] [cursor=pointer]
+          - generic [ref=e12] [cursor=pointer]: FraudShield
+        - heading "Welcome Back" [level=1] [ref=e13]
+        - paragraph [ref=e14]: Sign in to your account to continue
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: Email Address
+          - generic [ref=e18]:
+            - img [ref=e19]
+            - textbox "Email Address" [ref=e22]
+        - generic [ref=e23]:
+          - generic [ref=e24]: Password
+          - generic [ref=e25]:
+            - img [ref=e26]
+            - textbox "Password" [ref=e29]
+            - button [ref=e30] [cursor=pointer]:
+              - img [ref=e31] [cursor=pointer]
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - checkbox "Remember me" [ref=e36]
+            - generic [ref=e37]: Remember me
+          - link "Forgot password?" [ref=e38] [cursor=pointer]:
+            - /url: /auth/forgot-password
+        - button "Sign In" [ref=e39] [cursor=pointer]:
+          - generic [ref=e40] [cursor=pointer]: Sign In
+          - img [ref=e41] [cursor=pointer]
+      - paragraph [ref=e44]:
+        - text: Don't have an account?
+        - link "Sign up" [ref=e45] [cursor=pointer]:
+          - /url: /auth/register
+    - link "Back to home" [ref=e47] [cursor=pointer]:
+      - /url: /
+      - img [ref=e48] [cursor=pointer]
+      - generic [ref=e50] [cursor=pointer]: Back to home
+  - alert [ref=e51]
+```

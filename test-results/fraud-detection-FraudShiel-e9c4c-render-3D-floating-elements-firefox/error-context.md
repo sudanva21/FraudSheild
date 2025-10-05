@@ -1,0 +1,126 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - navigation [ref=e5]:
+      - generic [ref=e7]:
+        - link "FraudShield" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - img [ref=e10] [cursor=pointer]
+          - generic [ref=e12] [cursor=pointer]: FraudShield
+        - generic [ref=e13]:
+          - link "Home" [ref=e14] [cursor=pointer]:
+            - /url: /
+            - img [ref=e15] [cursor=pointer]
+            - generic [ref=e18] [cursor=pointer]: Home
+          - generic [ref=e19]:
+            - link "Sign In" [ref=e20] [cursor=pointer]:
+              - /url: /auth/login
+            - link "Get Started" [ref=e21] [cursor=pointer]:
+              - /url: /auth/register
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "Fraud Detection Redefined" [level=1] [ref=e26]:
+          - text: Fraud Detection
+          - generic [ref=e27]: Redefined
+        - paragraph [ref=e28]: Protect your business with AI-powered fraud detection that learns, adapts, and delivers precision at scale.
+      - generic [ref=e29]:
+        - link "Get Started Free" [ref=e30] [cursor=pointer]:
+          - /url: /auth/register
+          - generic [ref=e31] [cursor=pointer]: Get Started Free
+          - img [ref=e32] [cursor=pointer]
+        - link "Try Demo" [ref=e35] [cursor=pointer]:
+          - /url: /demo
+          - generic [ref=e36] [cursor=pointer]: Try Demo
+          - img [ref=e37] [cursor=pointer]
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]: 99.7%
+          - generic [ref=e43]: Accuracy Rate
+        - generic [ref=e44]:
+          - generic [ref=e45]: <50ms
+          - generic [ref=e46]: Response Time
+        - generic [ref=e47]:
+          - generic [ref=e48]: 10M+
+          - generic [ref=e49]: Transactions Analyzed
+        - generic [ref=e50]:
+          - generic [ref=e51]: 24/7
+          - generic [ref=e52]: Monitoring
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - heading "Why Choose FraudShield?" [level=2] [ref=e56]:
+          - text: Why Choose
+          - generic [ref=e57]: FraudShield
+          - text: "?"
+        - paragraph [ref=e58]: Our advanced AI technology provides comprehensive fraud detection with unmatched accuracy and speed.
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - img [ref=e62]
+          - heading "AI-Powered Detection" [level=3] [ref=e64]
+          - paragraph [ref=e65]: Advanced machine learning algorithms analyze transactions in real-time to detect fraudulent patterns.
+        - generic [ref=e66]:
+          - img [ref=e68]
+          - heading "Lightning Fast" [level=3] [ref=e70]
+          - paragraph [ref=e71]: Get fraud risk assessments in milliseconds with our optimized detection engine.
+        - generic [ref=e72]:
+          - img [ref=e74]
+          - heading "Comprehensive Analysis" [level=3] [ref=e77]
+          - paragraph [ref=e78]: Multi-factor analysis including amount, location, time, merchant category, and behavioral patterns.
+        - generic [ref=e79]:
+          - img [ref=e81]
+          - heading "Continuous Learning" [level=3] [ref=e84]
+          - paragraph [ref=e85]: Our AI model continuously learns and adapts to new fraud patterns and emerging threats.
+    - generic [ref=e87]:
+      - heading "Trusted by Industry Leaders" [level=2] [ref=e89]:
+        - text: Trusted by
+        - generic [ref=e90]: Industry Leaders
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - img [ref=e94]
+            - img [ref=e96]
+            - img [ref=e98]
+            - img [ref=e100]
+            - img [ref=e102]
+          - blockquote [ref=e104]: "\"FraudShield reduced our false positives by 80% while catching 15% more actual fraud attempts.\""
+          - generic [ref=e105]:
+            - generic [ref=e106]: Sarah Chen
+            - generic [ref=e107]: CTO, FinanceFlow
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - img [ref=e110]
+            - img [ref=e112]
+            - img [ref=e114]
+            - img [ref=e116]
+            - img [ref=e118]
+          - blockquote [ref=e120]: "\"The real-time analysis and dashboard have been game-changers for our fraud prevention strategy.\""
+          - generic [ref=e121]:
+            - generic [ref=e122]: Michael Rodriguez
+            - generic [ref=e123]: Security Director, PaySecure
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - img [ref=e126]
+            - img [ref=e128]
+            - img [ref=e130]
+            - img [ref=e132]
+            - img [ref=e134]
+          - blockquote [ref=e136]: "\"Implementation was seamless, and the ROI was evident within the first month.\""
+          - generic [ref=e137]:
+            - generic [ref=e138]: Emily Watson
+            - generic [ref=e139]: Risk Manager, TechBank
+    - generic [ref=e142]:
+      - heading "Ready to Stop Fraud?" [level=2] [ref=e143]
+      - paragraph [ref=e144]: Join thousands of businesses protecting themselves with FraudShield's AI-powered detection system.
+      - link "Start Your Free Trial" [ref=e145] [cursor=pointer]:
+        - /url: /auth/register
+        - generic [ref=e146] [cursor=pointer]: Start Your Free Trial
+        - img [ref=e147] [cursor=pointer]
+    - contentinfo [ref=e150]:
+      - generic [ref=e151]:
+        - generic [ref=e152]:
+          - img [ref=e153]
+          - generic [ref=e155]: FraudShield
+        - paragraph [ref=e156]: © 2024 FraudShield. All rights reserved. Protecting digital payments with AI.
+  - alert [ref=e157]
+```

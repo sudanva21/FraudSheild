@@ -1,0 +1,21 @@
+transaction_id,amount,timestamp,merchant_category,payment_method,customer_age,location,customer_id,is_fraud
+T001,250.50,2024-01-15 14:30:00,grocery,upi,34,Mumbai,C001,0
+T002,12000.00,2024-01-15 02:15:00,unknown,upi,28,Delhi,C002,1
+T003,85.75,2024-01-15 11:45:00,restaurant,upi,45,Bangalore,C003,0
+T004,5000.00,2024-01-15 23:20:00,atm,card,22,Chennai,C004,1
+T005,150.00,2024-01-15 16:30:00,retail,upi,39,Pune,C005,0
+T006,300.25,2024-01-15 12:00:00,gas,upi,31,Hyderabad,C006,0
+T007,18500.00,2024-01-15 03:45:00,online,mobile,55,Kolkata,C007,1
+T008,67.50,2024-01-15 19:15:00,grocery,upi,29,Mumbai,C001,0
+T009,1500.00,2024-01-15 14:20:00,retail,card,42,Delhi,C008,0
+T010,25000.00,2024-01-15 01:30:00,unknown,online,19,Gurgaon,C009,1
+T011,95.00,2024-01-15 10:30:00,restaurant,upi,36,Bangalore,C010,0
+T012,350.75,2024-01-15 17:45:00,grocery,upi,28,Chennai,C011,0
+T013,7500.00,2024-01-15 04:10:00,atm,card,33,Mumbai,C012,1
+T014,180.50,2024-01-15 13:25:00,retail,upi,48,Pune,C013,0
+T015,450.00,2024-01-15 15:50:00,gas,upi,35,Hyderabad,C014,0
+T016,12750.00,2024-01-15 02:35:00,online,mobile,26,Delhi,C015,1
+T017,78.25,2024-01-15 18:40:00,restaurant,upi,41,Bangalore,C016,0
+T018,220.00,2024-01-15 11:15:00,grocery,upi,52,Chennai,C017,0
+T019,3200.00,2024-01-15 23:55:00,unknown,card,24,Mumbai,C018,1
+T020,125.50,2024-01-15 09:30:00,retail,upi,37,Kolkata,C019,0
