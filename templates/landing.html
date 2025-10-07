@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraudShield - AI-Powered Fraud Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'dark': {
+                            900: '#0f0f0f',
+                            800: '#1a1a1a',
+                            700: '#2a2a2a',
+                            600: '#3a3a3a',
+                            500: '#4a4a4a',
+                            400: '#6b7280',
+                        },
+                        'primary': {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    boxShadow: {
+                        '3d': '0 20px 40px rgba(251, 191, 36, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f0f;
+            color: white;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* Glowing text effect */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        /* Card 3D effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(10px);
+        }
+
+        /* Button hover effects */
+        .btn-cyber {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-cyber:hover::before {
+            opacity: 1;
+        }
+
+        .btn-cyber::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-cyber:hover::after {
+            left: 100%;
+        }
+
+        /* Background pattern */
+        .cyber-bg {
+            background-image: 
+                linear-gradient(rgba(251, 191, 36, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(251, 191, 36, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            position: relative;
+        }
+
+        .cyber-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        @media (max-width: 768px) {
+            .card-3d:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-dark-900 text-white overflow-x-hidden">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 cyber-bg opacity-20"></div>
+
+    <!-- Navigation -->
+    <nav class="relative z-50 p-6 bg-dark-900/90 backdrop-blur-sm border-b border-dark-800">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 group">
+                <div class="p-2 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                    <i data-lucide="shield-check" class="h-6 w-6 text-dark-900"></i>
+                </div>
+                <span class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                    FraudShield
+                </span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" class="text-primary-400 transition-colors">Home</a>
+                <a href="/demo" class="text-gray-300 hover:text-primary-400 transition-colors">Demo</a>
+                <a href="#features" class="text-gray-300 hover:text-primary-400 transition-colors">Features</a>
+                <a href="#about" class="text-gray-300 hover:text-primary-400 transition-colors">About</a>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex items-center space-x-4">
+                <a href="/auth/login" class="text-gray-300 hover:text-primary-400 transition-colors">
+                    Sign In
+                </a>
+                <a href="/auth/register" class="btn-cyber px-6 py-2 text-dark-900 font-semibold rounded-lg">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative z-10 pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center">
+                <div class="fade-in">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-primary-400 to-primary-600 bg-clip-text text-transparent">
+                        Fraud Detection
+                        <br />
+                        <span class="glow-text">Redefined</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                        Protect your business with AI-powered fraud detection that learns, adapts, and delivers precision at scale.
+                    </p>
+                </div>
+
+                <div class="fade-in delay-2 flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                    <a href="/auth/register" class="btn-cyber px-8 py-4 rounded-lg font-semibold text-dark-900 flex items-center space-x-2 hover:scale-105 transition-all duration-300 shadow-3d">
+                        <span>Get Started Free</span>
+                        <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                    </a>
+                    <a href="/demo" class="px-8 py-4 rounded-lg border-2 border-primary-500 text-primary-400 font-semibold hover:bg-primary-500 hover:text-dark-900 transition-all duration-300 flex items-center space-x-2">
+                        <span>Try Demo</span>
+                        <i data-lucide="eye" class="h-5 w-5"></i>
+                    </a>
+                </div>
+
+                <!-- Stats -->
+                <div class="fade-in delay-4 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-primary-400 mb-2">99.7%</div>
+                        <div class="text-gray-400 text-sm md:text-base">Accuracy Rate</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-primary-400 mb-2">&lt;50ms</div>
+                        <div class="text-gray-400 text-sm md:text-base">Response Time</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-primary-400 mb-2">10M+</div>
+                        <div class="text-gray-400 text-sm md:text-base">Transactions Analyzed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-primary-400 mb-2">24/7</div>
+                        <div class="text-gray-400 text-sm md:text-base">Monitoring</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 bg-dark-800/50">
+        <div class="max-w-7xl mx-auto">
+            <div class="fade-in text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+                    Why Choose <span class="text-primary-400">FraudShield</span>?
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    Our advanced AI technology provides comprehensive fraud detection with unmatched accuracy and speed.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card-3d bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl p-6 hover:border-primary-500/50 transition-all duration-300 fade-in delay-1">
+                    <div class="bg-gradient-to-br from-primary-400 to-primary-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="shield" class="h-6 w-6 text-dark-900"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3">AI-Powered Detection</h3>
+                    <p class="text-gray-400 leading-relaxed">Advanced machine learning algorithms analyze transactions in real-time to detect fraudulent patterns.</p>
+                </div>
+
+                <div class="card-3d bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl p-6 hover:border-primary-500/50 transition-all duration-300 fade-in delay-2">
+                    <div class="bg-gradient-to-br from-primary-400 to-primary-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="zap" class="h-6 w-6 text-dark-900"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Lightning Fast</h3>
+                    <p class="text-gray-400 leading-relaxed">Get fraud risk assessments in milliseconds with our optimized detection engine.</p>
+                </div>
+
+                <div class="card-3d bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl p-6 hover:border-primary-500/50 transition-all duration-300 fade-in delay-3">
+                    <div class="bg-gradient-to-br from-primary-400 to-primary-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="eye" class="h-6 w-6 text-dark-900"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Comprehensive Analysis</h3>
+                    <p class="text-gray-400 leading-relaxed">Multi-factor analysis including amount, location, time, merchant category, and behavioral patterns.</p>
+                </div>
+
+                <div class="card-3d bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl p-6 hover:border-primary-500/50 transition-all duration-300 fade-in delay-4">
+                    <div class="bg-gradient-to-br from-primary-400 to-primary-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="trending-up" class="h-6 w-6 text-dark-900"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Continuous Learning</h3>
+                    <p class="text-gray-400 leading-relaxed">Our AI model continuously learns and adapts to new fraud patterns and emerging threats.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="fade-in text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+                    Trusted by <span class="text-primary-400">Industry Leaders</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-3d bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl p-6 hover:border-primary-500/50 transition-all duration-300 fade-in delay-1">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                    </div>
+                    <blockquote class="text-gray-300 mb-4 leading-relaxed">
+                        "FraudShield reduced our false positives by 80% while catching 15% more actual fraud attempts."
+                    </blockquote>
+                    <div class="border-t border-dark-600 pt-4">
+                        <div class="font-semibold text-white">Sarah Chen</div>
+                        <div class="text-sm text-gray-400">CTO, FinanceFlow</div>
+                    </div>
+                </div>
+
+                <div class="card-3d bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl p-6 hover:border-primary-500/50 transition-all duration-300 fade-in delay-2">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                    </div>
+                    <blockquote class="text-gray-300 mb-4 leading-relaxed">
+                        "The real-time analysis and dashboard have been game-changers for our fraud prevention strategy."
+                    </blockquote>
+                    <div class="border-t border-dark-600 pt-4">
+                        <div class="font-semibold text-white">Michael Rodriguez</div>
+                        <div class="text-sm text-gray-400">Security Director, PaySecure</div>
+                    </div>
+                </div>
+
+                <div class="card-3d bg-dark-700/50 backdrop-blur-sm border border-dark-600 rounded-xl p-6 hover:border-primary-500/50 transition-all duration-300 fade-in delay-3">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                        <i data-lucide="star" class="h-4 w-4 text-primary-400 fill-current"></i>
+                    </div>
+                    <blockquote class="text-gray-300 mb-4 leading-relaxed">
+                        "Implementation was seamless, and the ROI was evident within the first month."
+                    </blockquote>
+                    <div class="border-t border-dark-600 pt-4">
+                        <div class="font-semibold text-white">Emily Watson</div>
+                        <div class="text-sm text-gray-400">Risk Manager, TechBank</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-dark-800 to-dark-700">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+                    Ready to Stop Fraud?
+                </h2>
+                <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                    Join thousands of businesses protecting themselves with FraudShield's AI-powered detection system.
+                </p>
+                <a href="/auth/register" class="btn-cyber px-8 py-4 rounded-lg font-semibold text-dark-900 inline-flex items-center space-x-2 hover:scale-105 transition-all duration-300 shadow-3d">
+                    <span>Start Your Free Trial</span>
+                    <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-800">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <i data-lucide="shield" class="h-6 w-6 text-primary-400"></i>
+                <span class="text-xl font-bold text-white">FraudShield</span>
+            </div>
+            <p class="text-gray-400">
+                © 2025 FraudShield. All rights reserved. Protecting digital payments with AI.
+                <br />
+                <span class="text-sm text-gray-500 mt-2 block">
+                    Developed by <span class="text-primary-400 font-semibold">sudanva</span>
+                </span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Initialize Lucide icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -23,7 +23,7 @@ An intelligent fraud detection system for digital payments built with Python, Fl
 
 - **Backend**: Python, Flask
 - **Machine Learning**: scikit-learn, pandas, numpy
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla), Tailwind CSS
 - **Model Storage**: joblib for serialization
 
 ## Installation
@@ -207,17 +207,24 @@ The system automatically trains the model on startup using synthetic data. The m
 
 ```
 fraudsheild/
-├── app.py                 # Flask application
+├── app.py                 # Flask application  
 ├── fraud_detector.py      # ML model and prediction logic
 ├── requirements.txt       # Python dependencies
 ├── README.md             # This file
-├── templates/
-│   └── index.html        # Main HTML template
-└── static/
-    ├── css/
-    │   └── styles.css    # Application styles
-    └── js/
-        └── script.js     # Frontend JavaScript
+├── download_dataset.py    # Dataset download utility
+├── prepare_dataset.py     # Dataset preparation utility
+├── *.joblib              # Trained ML models and encoders
+├── templates/            # Flask HTML templates
+│   ├── landing.html      # Landing page
+│   ├── demo.html         # Demo page  
+│   ├── dashboard.html    # Dashboard page
+│   ├── login.html        # Login page
+│   └── register.html     # Register page
+├── static/               # Static assets
+│   ├── css/
+│   └── js/
+├── data/                 # Dataset storage
+└── venv/                # Python virtual environment
 ```
 
 ## Security Considerations

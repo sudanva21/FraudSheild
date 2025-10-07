@@ -1,2 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Flask
+instance/
+.webassets-cache
+
+# Machine Learning Models (keep trained models)
+*.pkl
+# *.joblib  # Keep trained models for deployment
+*.model
+
+# Data
+data/*.csv
+!data/README.md
+
+# IDE
+# .vscode/  # Keep for Python project configuration
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Temporary files
+*.tmp
+*.temp
 node_modules
-venv

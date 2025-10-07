@@ -12,13 +12,28 @@ fraud_detector = FraudDetector()
 
 @app.route('/')
 def index():
-    """Main page with cyberpunk design matching React app"""
-    return render_template('index.html')
+    """Landing page with cyberpunk design matching Next.js app"""
+    return render_template('landing.html')
 
 @app.route('/demo')
 def demo():
-    """Demo page with 3D background"""
+    """Interactive demo page"""
     return render_template('demo.html')
+
+@app.route('/dashboard')
+def dashboard():
+    """Dashboard page for authenticated users"""
+    return render_template('dashboard.html')
+
+@app.route('/auth/login')
+def login():
+    """User login page"""
+    return render_template('login.html')
+
+@app.route('/auth/register')  
+def register():
+    """User registration page"""
+    return render_template('register.html')
 
 @app.route('/predict', methods=['POST'])
 def predict_fraud():
@@ -46,7 +61,7 @@ def predict_fraud():
             'fraud_probability': result['fraud_probability'],
             'is_fraud': result['is_fraud'],
             'risk_level': result['risk_level'],
-            'factors': result['risk_factors'],
+            'risk_factors': result['risk_factors'],
             'timestamp': datetime.now().isoformat()
         })
         

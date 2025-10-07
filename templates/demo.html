@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraudShield Demo - AI-Powered Fraud Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'dark': {
+                            900: '#0f0f0f',
+                            800: '#1a1a1a',
+                            700: '#2a2a2a',
+                            600: '#3a3a3a',
+                            500: '#4a4a4a',
+                            400: '#6b7280',
+                        },
+                        'primary': {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    boxShadow: {
+                        '3d': '0 20px 40px rgba(251, 191, 36, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f0f;
+            color: white;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* Card 3D effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(10px);
+        }
+
+        /* Button hover effects */
+        .btn-cyber {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-cyber:hover::before {
+            opacity: 1;
+        }
+
+        .btn-cyber::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-cyber:hover::after {
+            left: 100%;
+        }
+
+        /* Loading spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            border: 3px solid rgba(251, 191, 36, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid #fbbf24;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            will-change: transform;
+            margin: 0 auto;
+        }
+
+        /* Form styling */
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            color: white;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+        }
+
+        /* Background pattern */
+        .cyber-bg {
+            background-image: 
+                linear-gradient(rgba(251, 191, 36, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(251, 191, 36, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            position: relative;
+        }
+
+        .cyber-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        @media (max-width: 768px) {
+            .card-3d:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-dark-900 text-white overflow-x-hidden">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 cyber-bg opacity-20"></div>
+
+    <!-- Navigation -->
+    <nav class="relative z-50 p-6 bg-dark-900/90 backdrop-blur-sm border-b border-dark-800">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 group">
+                <div class="p-2 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                    <i data-lucide="shield-check" class="h-6 w-6 text-dark-900"></i>
+                </div>
+                <span class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                    FraudShield
+                </span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" class="text-gray-300 hover:text-primary-400 transition-colors">Home</a>
+                <a href="/demo" class="text-primary-400 transition-colors">Demo</a>
+                <a href="/dashboard" class="text-gray-300 hover:text-primary-400 transition-colors">Dashboard</a>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex items-center space-x-4">
+                <a href="/auth/login" class="text-gray-300 hover:text-primary-400 transition-colors">
+                    Sign In
+                </a>
+                <a href="/auth/register" class="btn-cyber px-6 py-2 text-dark-900 font-semibold rounded-lg">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="fade-in mb-8">
+                <a href="/" class="inline-flex items-center space-x-2 text-primary-400 hover:text-primary-300 transition-colors mb-4">
+                    <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                    <span>Back to Home</span>
+                </a>
+                <h1 class="text-4xl font-bold text-white mb-2">
+                    Try <span class="text-primary-400">FraudShield Demo</span>
+                </h1>
+                <p class="text-gray-400">
+                    Experience our AI-powered fraud detection system with this interactive demo
+                </p>
+                <div class="mt-4 p-4 bg-primary-400/10 border border-primary-400/30 rounded-lg">
+                    <p class="text-sm text-primary-300">
+                        📝 This is a demo version with simulated results. <a href="/auth/register" class="underline">Sign up</a> for full access to our real-time fraud detection system.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Transaction Input -->
+                <div class="lg:col-span-2 fade-in delay-1">
+                    <div class="card-3d bg-dark-800/70 backdrop-blur-md border border-dark-700 rounded-xl p-6">
+                        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center space-x-2">
+                            <i data-lucide="zap" class="h-6 w-6 text-primary-400"></i>
+                            <span>Transaction Analysis</span>
+                        </h2>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="dollar-sign" class="inline h-4 w-4 mr-1"></i>
+                                    Transaction Amount ($)
+                                </label>
+                                <input type="number" id="amount" value="150.00" step="0.01" min="0" 
+                                       class="form-input" placeholder="150.00">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="clock" class="inline h-4 w-4 mr-1"></i>
+                                    Transaction Hour (0-23)
+                                </label>
+                                <input type="number" id="hour" value="14" min="0" max="23" 
+                                       class="form-input" placeholder="14">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="hash" class="inline h-4 w-4 mr-1"></i>
+                                    Merchant Category
+                                </label>
+                                <select id="merchant_category" class="form-input">
+                                    <option value="grocery">Grocery</option>
+                                    <option value="gas">Gas Station</option>
+                                    <option value="restaurant">Restaurant</option>
+                                    <option value="retail">Retail</option>
+                                    <option value="online" selected>Online</option>
+                                    <option value="atm">ATM</option>
+                                    <option value="unknown">Unknown</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="credit-card" class="inline h-4 w-4 mr-1"></i>
+                                    Payment Method
+                                </label>
+                                <select id="payment_method" class="form-input">
+                                    <option value="card" selected>Credit/Debit Card</option>
+                                    <option value="mobile">Mobile Payment</option>
+                                    <option value="online">Online Banking</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="user" class="inline h-4 w-4 mr-1"></i>
+                                    Customer Age
+                                </label>
+                                <input type="number" id="customer_age" value="32" min="18" max="100" 
+                                       class="form-input" placeholder="32">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="hash" class="inline h-4 w-4 mr-1"></i>
+                                    Monthly Transaction Frequency
+                                </label>
+                                <input type="number" id="transaction_frequency" value="5" min="1" max="100" 
+                                       class="form-input" placeholder="5">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="map-pin" class="inline h-4 w-4 mr-1"></i>
+                                    Location Risk Score (0-1)
+                                </label>
+                                <input type="number" id="location_risk_score" value="0.3" step="0.01" min="0" max="1" 
+                                       class="form-input" placeholder="0.3">
+                                <p class="text-xs text-gray-500 mt-1">0 = Very Safe, 1 = High Risk</p>
+                            </div>
+                        </div>
+
+                        <button onclick="analyzeTransaction()" id="analyze-btn" 
+                                class="w-full mt-8 btn-cyber py-4 rounded-lg font-semibold text-dark-900 flex items-center justify-center space-x-2 hover:scale-105 transition-all duration-300">
+                            <i data-lucide="shield" class="h-5 w-5"></i>
+                            <span>Analyze Transaction (Demo)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="lg:col-span-1 fade-in delay-2">
+                    <div class="card-3d bg-dark-800/70 backdrop-blur-md border border-dark-700 rounded-xl p-6">
+                        <h2 class="text-xl font-semibold text-white mb-6">Analysis Results</h2>
+                        
+                        <div id="results-content">
+                            <div class="text-center py-8">
+                                <i data-lucide="scan" class="h-12 w-12 text-gray-500 mx-auto mb-4"></i>
+                                <p class="text-gray-400">Enter transaction details and click "Analyze Transaction" to see results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-dark-800">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <i data-lucide="shield" class="h-6 w-6 text-primary-400"></i>
+                <span class="text-xl font-bold text-white">FraudShield</span>
+            </div>
+            <p class="text-gray-400">
+                © 2025 FraudShield. All rights reserved. Protecting digital payments with AI.
+                <br />
+                <span class="text-sm text-gray-500 mt-2 block">
+                    Developed by <span class="text-primary-400 font-semibold">sudanva</span>
+                </span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Initialize Lucide icons -->
+    <script>
+        lucide.createIcons();
+        
+        let isAnalyzing = false;
+
+        async function analyzeTransaction() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            const button = document.getElementById('analyze-btn');
+            const originalContent = button.innerHTML;
+            
+            // Update button to show loading state
+            button.innerHTML = '<div class="spinner"></div>';
+            button.disabled = true;
+            
+            try {
+                // Get form data
+                const formData = {
+                    amount: parseFloat(document.getElementById('amount').value) || 0,
+                    hour: parseInt(document.getElementById('hour').value) || 0,
+                    merchant_category: document.getElementById('merchant_category').value || 'unknown',
+                    payment_method: document.getElementById('payment_method').value || 'card',
+                    customer_age: parseInt(document.getElementById('customer_age').value) || 25,
+                    transaction_frequency: parseInt(document.getElementById('transaction_frequency').value) || 1,
+                    location_risk_score: parseFloat(document.getElementById('location_risk_score').value) || 0.5
+                };
+                
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Simulate fraud detection
+                const result = simulateFraudDetection(formData);
+                
+                // Display results
+                displayResults(result);
+                
+            } catch (error) {
+                console.error('Analysis failed:', error);
+                displayError();
+            } finally {
+                // Reset button
+                button.innerHTML = originalContent;
+                button.disabled = false;
+                isAnalyzing = false;
+                lucide.createIcons();
+            }
+        }
+        
+        function simulateFraudDetection(data) {
+            // Simple fraud detection simulation
+            let riskScore = 0;
+            const factors = [];
+
+            // Amount analysis
+            if (data.amount > 1000) {
+                riskScore += 0.3;
+                factors.push('High transaction amount');
+            } else if (data.amount < 5) {
+                riskScore += 0.2;
+                factors.push('Unusually low amount');
+            }
+
+            // Time analysis
+            if (data.hour < 6 || data.hour > 22) {
+                riskScore += 0.25;
+                factors.push('Transaction during unusual hours');
+            }
+
+            // Location risk
+            riskScore += data.location_risk_score * 0.4;
+
+            if (data.location_risk_score > 0.7) {
+                factors.push('High-risk location');
+            }
+
+            // Merchant category analysis
+            if (['online', 'unknown'].includes(data.merchant_category)) {
+                riskScore += 0.1;
+                factors.push('Online/unknown merchant category');
+            }
+
+            // Frequency analysis
+            if (data.transaction_frequency > 20) {
+                riskScore += 0.2;
+                factors.push('High transaction frequency');
+            } else if (data.transaction_frequency < 2) {
+                riskScore += 0.15;
+                factors.push('Unusually low transaction frequency');
+            }
+
+            // Age analysis
+            if (data.customer_age < 21 || data.customer_age > 70) {
+                riskScore += 0.1;
+                factors.push('Customer age outside typical range');
+            }
+
+            // Cap the risk score
+            riskScore = Math.min(riskScore, 1);
+            
+            // Add some randomness for demo
+            riskScore += (Math.random() - 0.5) * 0.2;
+            riskScore = Math.max(0, Math.min(1, riskScore));
+
+            const fraudProbability = Math.round(riskScore * 100);
+            const isFraud = fraudProbability > 70;
+            
+            let riskLevel;
+            if (fraudProbability < 30) riskLevel = 'low';
+            else if (fraudProbability < 70) riskLevel = 'medium';
+            else riskLevel = 'high';
+
+            if (factors.length === 0) {
+                factors.push('Standard transaction patterns');
+            }
+
+            return {
+                fraud_probability: fraudProbability,
+                is_fraud: isFraud,
+                risk_level: riskLevel,
+                risk_factors: factors,
+                timestamp: new Date().toISOString(),
+            };
+        }
+        
+        function displayResults(result) {
+            const resultsContent = document.getElementById('results-content');
+            
+            const statusClass = result.is_fraud ? 'text-red-400' : 'text-green-400';
+            const statusIcon = result.is_fraud ? 'alert-triangle' : 'check-circle';
+            const statusText = result.is_fraud ? 'FRAUD DETECTED' : 'LEGITIMATE TRANSACTION';
+            
+            const riskColors = {
+                'low': 'text-green-400 bg-green-400/20',
+                'medium': 'text-yellow-400 bg-yellow-400/20',
+                'high': 'text-red-400 bg-red-400/20'
+            };
+            
+            resultsContent.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Status -->
+                    <div class="text-center">
+                        <div class="flex items-center justify-center space-x-2 mb-2">
+                            <i data-lucide="${statusIcon}" class="h-6 w-6 ${statusClass}"></i>
+                            <span class="font-semibold ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+
+                    <!-- Risk Level -->
+                    <div class="text-center">
+                        <div class="text-sm text-gray-400 mb-1">Risk Level</div>
+                        <div class="inline-flex px-3 py-1 rounded-full text-sm font-semibold ${riskColors[result.risk_level]}">
+                            ${result.risk_level.toUpperCase()}
+                        </div>
+                    </div>
+
+                    <!-- Fraud Probability -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-gray-400">Fraud Probability</span>
+                            <span class="text-sm font-semibold ${statusClass}">${result.fraud_probability}%</span>
+                        </div>
+                        <div class="w-full bg-dark-600 rounded-full h-2">
+                            <div class="h-2 rounded-full transition-all duration-1000 ${result.is_fraud ? 'bg-red-400' : 'bg-green-400'}" 
+                                 style="width: ${result.fraud_probability}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Factors -->
+                    <div>
+                        <div class="text-sm text-gray-400 mb-3">Risk Factors</div>
+                        <div class="space-y-2">
+                            ${result.risk_factors.map(factor => 
+                                `<div class="flex items-start space-x-2 text-sm">
+                                    <i data-lucide="info" class="h-4 w-4 text-primary-400 flex-shrink-0 mt-0.5"></i>
+                                    <span class="text-gray-300">${factor}</span>
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Timestamp -->
+                    <div class="text-center pt-4 border-t border-dark-600">
+                        <div class="text-xs text-gray-500">
+                            Analysis completed at ${new Date().toLocaleTimeString()}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            lucide.createIcons();
+        }
+        
+        function displayError() {
+            const resultsContent = document.getElementById('results-content');
+            resultsContent.innerHTML = `
+                <div class="text-center py-8">
+                    <i data-lucide="alert-circle" class="h-12 w-12 text-red-400 mx-auto mb-4"></i>
+                    <p class="text-red-400">Analysis failed. Please try again.</p>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

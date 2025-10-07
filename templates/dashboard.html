@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FraudShield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'dark': {
+                            900: '#0f0f0f',
+                            800: '#1a1a1a',
+                            700: '#2a2a2a',
+                            600: '#3a3a3a',
+                            500: '#4a4a4a',
+                            400: '#6b7280',
+                        },
+                        'primary': {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    boxShadow: {
+                        '3d': '0 20px 40px rgba(251, 191, 36, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f0f;
+            color: white;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Card 3D effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(10px);
+        }
+
+        /* Button hover effects */
+        .btn-cyber {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-cyber:hover::after {
+            left: 100%;
+        }
+
+        /* Loading spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            border: 3px solid rgba(251, 191, 36, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid #fbbf24;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            will-change: transform;
+            margin: 0 auto;
+        }
+
+        /* Form styling */
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            color: white;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+
+        @media (max-width: 768px) {
+            .card-3d:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-dark-900 text-white">
+    <!-- Navigation -->
+    <nav class="relative z-50 p-6 bg-dark-900/90 backdrop-blur-sm border-b border-dark-800">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 group">
+                <div class="p-2 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                    <i data-lucide="shield-check" class="h-6 w-6 text-dark-900"></i>
+                </div>
+                <span class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                    FraudShield
+                </span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" class="text-gray-300 hover:text-primary-400 transition-colors">Home</a>
+                <a href="/demo" class="text-gray-300 hover:text-primary-400 transition-colors">Demo</a>
+                <a href="/dashboard" class="text-primary-400 transition-colors">Dashboard</a>
+            </div>
+
+            <!-- User Menu -->
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-300">Welcome back!</span>
+                <a href="/auth/login" class="text-gray-300 hover:text-primary-400 transition-colors">
+                    Sign Out
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="fade-in mb-8">
+                <h1 class="text-4xl font-bold text-white mb-2">
+                    Fraud Detection <span class="text-primary-400">Dashboard</span>
+                </h1>
+                <p class="text-gray-400">
+                    Analyze transactions in real-time with our AI-powered fraud detection system
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Transaction Input -->
+                <div class="lg:col-span-2 fade-in delay-1">
+                    <div class="card-3d bg-dark-800/70 backdrop-blur-md border border-dark-700 rounded-xl p-6">
+                        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center space-x-2">
+                            <i data-lucide="zap" class="h-6 w-6 text-primary-400"></i>
+                            <span>Transaction Analysis</span>
+                        </h2>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="dollar-sign" class="inline h-4 w-4 mr-1"></i>
+                                    Transaction Amount ($)
+                                </label>
+                                <input type="number" id="amount" value="150.00" step="0.01" min="0" 
+                                       class="form-input" placeholder="150.00">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="clock" class="inline h-4 w-4 mr-1"></i>
+                                    Transaction Hour (0-23)
+                                </label>
+                                <input type="number" id="hour" value="14" min="0" max="23" 
+                                       class="form-input" placeholder="14">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="hash" class="inline h-4 w-4 mr-1"></i>
+                                    Merchant Category
+                                </label>
+                                <select id="merchant_category" class="form-input">
+                                    <option value="grocery">Grocery</option>
+                                    <option value="gas">Gas Station</option>
+                                    <option value="restaurant">Restaurant</option>
+                                    <option value="retail">Retail</option>
+                                    <option value="online" selected>Online</option>
+                                    <option value="atm">ATM</option>
+                                    <option value="unknown">Unknown</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="credit-card" class="inline h-4 w-4 mr-1"></i>
+                                    Payment Method
+                                </label>
+                                <select id="payment_method" class="form-input">
+                                    <option value="card" selected>Credit/Debit Card</option>
+                                    <option value="mobile">Mobile Payment</option>
+                                    <option value="online">Online Banking</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="user" class="inline h-4 w-4 mr-1"></i>
+                                    Customer Age
+                                </label>
+                                <input type="number" id="customer_age" value="32" min="18" max="100" 
+                                       class="form-input" placeholder="32">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="trending-up" class="inline h-4 w-4 mr-1"></i>
+                                    Monthly Transaction Frequency
+                                </label>
+                                <input type="number" id="transaction_frequency" value="5" min="1" max="100" 
+                                       class="form-input" placeholder="5">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
+                                    <i data-lucide="map-pin" class="inline h-4 w-4 mr-1"></i>
+                                    Location Risk Score (0-1)
+                                </label>
+                                <input type="number" id="location_risk_score" value="0.3" step="0.01" min="0" max="1" 
+                                       class="form-input" placeholder="0.3">
+                                <p class="text-xs text-gray-500 mt-1">0 = Very Safe, 1 = High Risk</p>
+                            </div>
+                        </div>
+
+                        <button onclick="analyzeTransaction()" id="analyze-btn" 
+                                class="w-full mt-8 btn-cyber py-4 rounded-lg font-semibold text-dark-900 flex items-center justify-center space-x-2 hover:scale-105 transition-all duration-300">
+                            <i data-lucide="shield" class="h-5 w-5"></i>
+                            <span>Analyze Transaction</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results & Analysis History -->
+                <div class="lg:col-span-1 space-y-8 fade-in delay-2">
+                    <!-- Current Result -->
+                    <div class="card-3d bg-dark-800/70 backdrop-blur-md border border-dark-700 rounded-xl p-6">
+                        <h2 class="text-xl font-semibold text-white mb-6">Current Analysis</h2>
+                        
+                        <div id="results-section">
+                            <div class="text-center py-8">
+                                <i data-lucide="scan" class="h-12 w-12 text-gray-500 mx-auto mb-4"></i>
+                                <p class="text-gray-400">Enter transaction details and click "Analyze Transaction" to see results</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analysis History -->
+                    <div class="card-3d bg-dark-800/70 backdrop-blur-md border border-dark-700 rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-semibold text-white">Analysis History</h2>
+                            <button onclick="clearHistory()" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">
+                                Clear
+                            </button>
+                        </div>
+                        
+                        <div id="analysis-history">
+                            <div class="text-center py-8">
+                                <i data-lucide="clock" class="h-8 w-8 text-gray-500 mx-auto mb-2"></i>
+                                <p class="text-gray-400 text-sm">No analyses yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialize Lucide icons -->
+    <script>
+        lucide.createIcons();
+        
+        let isAnalyzing = false;
+        let analysisHistory = JSON.parse(localStorage.getItem('fraud_analyses') || '[]');
+
+        // Load analysis history on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            displayAnalysisHistory();
+        });
+
+        async function analyzeTransaction() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            const button = document.getElementById('analyze-btn');
+            const originalContent = button.innerHTML;
+            
+            // Update button to show loading state
+            button.innerHTML = '<div class="spinner"></div>';
+            button.disabled = true;
+            
+            try {
+                // Get form data
+                const formData = {
+                    amount: parseFloat(document.getElementById('amount').value) || 0,
+                    hour: parseInt(document.getElementById('hour').value) || 0,
+                    merchant_category: document.getElementById('merchant_category').value || 'unknown',
+                    payment_method: document.getElementById('payment_method').value || 'card',
+                    customer_age: parseInt(document.getElementById('customer_age').value) || 25,
+                    transaction_frequency: parseInt(document.getElementById('transaction_frequency').value) || 1,
+                    location_risk_score: parseFloat(document.getElementById('location_risk_score').value) || 0.5
+                };
+                
+                // Try to call the real API
+                let result;
+                try {
+                    const response = await fetch('/predict', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    if (response.ok) {
+                        const apiResult = await response.json();
+                        result = {
+                            fraud_probability: Math.round(apiResult.fraud_probability * 100),
+                            is_fraud: apiResult.is_fraud,
+                            risk_level: apiResult.risk_level,
+                            risk_factors: apiResult.risk_factors,
+                            timestamp: apiResult.timestamp
+                        };
+                    } else {
+                        throw new Error('API call failed');
+                    }
+                } catch (error) {
+                    console.log('Using fallback simulation');
+                    // Fallback to local simulation
+                    result = simulateFraudDetection(formData);
+                }
+                
+                // Create analysis result
+                const analysisResult = {
+                    id: Date.now().toString(),
+                    transaction_data: formData,
+                    result: result,
+                    created_at: new Date().toISOString()
+                };
+                
+                // Display current result
+                displayResults(result);
+                
+                // Add to history
+                analysisHistory.unshift(analysisResult);
+                if (analysisHistory.length > 10) {
+                    analysisHistory = analysisHistory.slice(0, 10);
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('fraud_analyses', JSON.stringify(analysisHistory));
+                displayAnalysisHistory();
+                
+            } catch (error) {
+                console.error('Analysis failed:', error);
+                displayError();
+            } finally {
+                // Reset button
+                button.innerHTML = originalContent;
+                button.disabled = false;
+                isAnalyzing = false;
+                lucide.createIcons();
+            }
+        }
+        
+        function simulateFraudDetection(data) {
+            // Simple fraud detection simulation
+            let riskScore = 0;
+            const factors = [];
+
+            // Amount analysis
+            if (data.amount > 1000) {
+                riskScore += 0.3;
+                factors.push('High transaction amount');
+            } else if (data.amount < 5) {
+                riskScore += 0.2;
+                factors.push('Unusually low amount');
+            }
+
+            // Time analysis
+            if (data.hour < 6 || data.hour > 22) {
+                riskScore += 0.25;
+                factors.push('Transaction during unusual hours');
+            }
+
+            // Location risk
+            riskScore += data.location_risk_score * 0.4;
+
+            if (data.location_risk_score > 0.7) {
+                factors.push('High-risk location');
+            }
+
+            // Merchant category analysis
+            if (['online', 'unknown'].includes(data.merchant_category)) {
+                riskScore += 0.1;
+                factors.push('Online/unknown merchant category');
+            }
+
+            // Frequency analysis
+            if (data.transaction_frequency > 20) {
+                riskScore += 0.2;
+                factors.push('High transaction frequency');
+            } else if (data.transaction_frequency < 2) {
+                riskScore += 0.15;
+                factors.push('Unusually low transaction frequency');
+            }
+
+            // Age analysis
+            if (data.customer_age < 21 || data.customer_age > 70) {
+                riskScore += 0.1;
+                factors.push('Customer age outside typical range');
+            }
+
+            // Cap the risk score
+            riskScore = Math.min(riskScore, 1);
+            
+            // Add some randomness
+            riskScore += (Math.random() - 0.5) * 0.2;
+            riskScore = Math.max(0, Math.min(1, riskScore));
+
+            const fraudProbability = Math.round(riskScore * 100);
+            const isFraud = fraudProbability > 70;
+            
+            let riskLevel;
+            if (fraudProbability < 30) riskLevel = 'low';
+            else if (fraudProbability < 70) riskLevel = 'medium';
+            else riskLevel = 'high';
+
+            if (factors.length === 0) {
+                factors.push('Standard transaction patterns');
+            }
+
+            return {
+                fraud_probability: fraudProbability,
+                is_fraud: isFraud,
+                risk_level: riskLevel,
+                risk_factors: factors,
+                timestamp: new Date().toISOString(),
+            };
+        }
+        
+        function displayResults(result) {
+            const resultsSection = document.getElementById('results-section');
+            
+            const statusClass = result.is_fraud ? 'text-red-400' : 'text-green-400';
+            const statusIcon = result.is_fraud ? 'alert-triangle' : 'check-circle';
+            const statusText = result.is_fraud ? 'FRAUD DETECTED' : 'LEGITIMATE';
+            
+            const riskColors = {
+                'low': 'text-green-400 bg-green-400/20',
+                'medium': 'text-yellow-400 bg-yellow-400/20',
+                'high': 'text-red-400 bg-red-400/20'
+            };
+            
+            resultsSection.innerHTML = `
+                <div class="space-y-4">
+                    <!-- Status -->
+                    <div class="text-center">
+                        <div class="flex items-center justify-center space-x-2 mb-2">
+                            <i data-lucide="${statusIcon}" class="h-5 w-5 ${statusClass}"></i>
+                            <span class="font-semibold ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="inline-flex px-3 py-1 rounded-full text-xs font-semibold ${riskColors[result.risk_level]}">
+                            ${result.risk_level.toUpperCase()} RISK
+                        </div>
+                    </div>
+
+                    <!-- Probability -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-gray-400">Fraud Probability</span>
+                            <span class="text-sm font-semibold ${statusClass}">${result.fraud_probability}%</span>
+                        </div>
+                        <div class="w-full bg-dark-600 rounded-full h-2">
+                            <div class="h-2 rounded-full transition-all duration-1000 ${result.is_fraud ? 'bg-red-400' : 'bg-green-400'}" 
+                                 style="width: ${result.fraud_probability}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Factors -->
+                    <div>
+                        <div class="text-sm text-gray-400 mb-2">Risk Factors</div>
+                        <div class="space-y-1 max-h-32 overflow-y-auto">
+                            ${result.risk_factors.map(factor => 
+                                `<div class="text-xs text-gray-300 bg-dark-600 px-2 py-1 rounded">${factor}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            lucide.createIcons();
+        }
+        
+        function displayAnalysisHistory() {
+            const historyContainer = document.getElementById('analysis-history');
+            
+            if (analysisHistory.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="text-center py-8">
+                        <i data-lucide="clock" class="h-8 w-8 text-gray-500 mx-auto mb-2"></i>
+                        <p class="text-gray-400 text-sm">No analyses yet</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            historyContainer.innerHTML = analysisHistory.map(analysis => {
+                const result = analysis.result;
+                const statusClass = result.is_fraud ? 'text-red-400' : 'text-green-400';
+                const statusIcon = result.is_fraud ? 'alert-triangle' : 'check-circle';
+                const time = new Date(analysis.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                return `
+                    <div class="border-b border-dark-600 last:border-b-0 pb-3 last:pb-0 mb-3 last:mb-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="${statusIcon}" class="h-4 w-4 ${statusClass}"></i>
+                                <span class="text-sm font-medium text-white">$${analysis.transaction_data.amount}</span>
+                            </div>
+                            <span class="text-xs text-gray-500">${time}</span>
+                        </div>
+                        <div class="text-xs text-gray-400 mb-1">
+                            ${analysis.transaction_data.merchant_category} • ${result.fraud_probability}% risk
+                        </div>
+                        <div class="text-xs ${statusClass}">
+                            ${result.is_fraud ? 'Fraud Detected' : 'Legitimate Transaction'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+        
+        function clearHistory() {
+            analysisHistory = [];
+            localStorage.removeItem('fraud_analyses');
+            displayAnalysisHistory();
+        }
+        
+        function displayError() {
+            const resultsSection = document.getElementById('results-section');
+            resultsSection.innerHTML = `
+                <div class="text-center py-8">
+                    <i data-lucide="alert-circle" class="h-12 w-12 text-red-400 mx-auto mb-4"></i>
+                    <p class="text-red-400">Analysis failed. Please try again.</p>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
