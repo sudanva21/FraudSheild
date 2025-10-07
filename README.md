@@ -12,19 +12,27 @@ An intelligent fraud detection system for digital payments built with Python, Fl
 - **Machine Learning Powered**: Uses Random Forest classifier for accurate predictions
 - **Real Dataset Support**: Train with actual UPI transaction data from Kaggle
 - **Automatic Data Processing**: Handles various CSV formats and column names
-- **User-Friendly Interface**: Clean, responsive web interface
+- **Modern UI/UX**: Cyberpunk-themed interface with 3D effects and animations
+- **User Authentication**: Complete registration, login, and profile management system
+- **Database Integration**: Supabase support for user management and data persistence
 - **Risk Assessment**: Detailed risk level classification (Low, Medium, High)
 - **Risk Factor Analysis**: Identifies specific factors contributing to fraud risk
 - **Statistics Dashboard**: Real-time system performance metrics
 - **Dataset Management**: Built-in tools for downloading and preparing datasets
 - **Responsive Design**: Works seamlessly across devices
+- **Demo Mode**: Interactive demo for users without registration
+- **Session Management**: Secure user sessions with proper authentication
 
 ## Technology Stack
 
-- **Backend**: Python, Flask
+- **Backend**: Python, Flask, Supabase
 - **Machine Learning**: scikit-learn, pandas, numpy
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla), Tailwind CSS
+- **Database**: Supabase (PostgreSQL-based)
+- **Authentication**: Session-based with password hashing
 - **Model Storage**: joblib for serialization
+- **UI Framework**: Tailwind CSS with custom 3D animations
+- **Icons**: Lucide React icons
 
 ## Installation
 
@@ -45,12 +53,18 @@ An intelligent fraud detection system for digital payments built with Python, Fl
    pip install -r requirements.txt
    ```
 
-4. **Run the application**:
+4. **Set up environment variables** (optional for Supabase):
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your Supabase credentials
+   ```
+
+5. **Run the application**:
    ```bash
    python app.py
    ```
 
-5. **Access the application**:
+6. **Access the application**:
    Open your browser and navigate to `http://localhost:5000`
 
 ## Using Real UPI Dataset
@@ -113,9 +127,19 @@ The system automatically handles various column names and formats:
 
 ## Usage
 
+### User Authentication
+
+1. **Registration**: New users can create an account with email and password
+2. **Login**: Existing users can log in to access the full dashboard
+3. **Demo Mode**: Users can try the system without registration via the demo page
+
 ### Analyzing a Transaction
 
-1. **Enter Transaction Details**:
+1. **Access the Dashboard**: 
+   - Logged-in users: Navigate to `/dashboard`
+   - Demo users: Use `/demo` for quick access
+
+2. **Enter Transaction Details**:
    - **Amount**: Transaction value in USD
    - **Hour**: Time of transaction (0-23)
    - **Merchant Category**: Type of merchant (grocery, gas, restaurant, etc.)
@@ -124,13 +148,14 @@ The system automatically handles various column names and formats:
    - **Transaction Frequency**: Monthly transaction count for the customer
    - **Location Risk Score**: Geographic risk assessment (0-1, where 1 is highest risk)
 
-2. **Click "Analyze Transaction"**: The system will process the data and provide results
+3. **Click "Analyze Transaction"**: The system will process the data and provide results
 
-3. **Review Results**:
+4. **Review Results**:
    - **Fraud Status**: Clear indication of fraud detection
    - **Risk Level**: Low, Medium, or High risk classification
    - **Fraud Probability**: Percentage likelihood of fraud
    - **Risk Factors**: Specific elements contributing to the assessment
+   - **Analysis History**: Previous analyses are saved locally
 
 ## Machine Learning Model
 
@@ -207,22 +232,26 @@ The system automatically trains the model on startup using synthetic data. The m
 
 ```
 fraudsheild/
-├── app.py                 # Flask application  
+├── app.py                 # Flask application with authentication
 ├── fraud_detector.py      # ML model and prediction logic
 ├── requirements.txt       # Python dependencies
 ├── README.md             # This file
 ├── download_dataset.py    # Dataset download utility
 ├── prepare_dataset.py     # Dataset preparation utility
+├── .env.example          # Environment variables template
 ├── *.joblib              # Trained ML models and encoders
 ├── templates/            # Flask HTML templates
-│   ├── landing.html      # Landing page
-│   ├── demo.html         # Demo page  
-│   ├── dashboard.html    # Dashboard page
-│   ├── login.html        # Login page
-│   └── register.html     # Register page
+│   ├── landing.html      # Landing page with 3D effects
+│   ├── demo.html         # Demo page for unregistered users
+│   ├── dashboard.html    # Protected dashboard page
+│   ├── login.html        # User login page
+│   ├── register.html     # User registration page
+│   └── profile.html      # User profile management
 ├── static/               # Static assets
 │   ├── css/
+│   │   └── styles.css    # Custom CSS with 3D animations
 │   └── js/
+│       └── script.js     # Enhanced JavaScript functionality
 ├── data/                 # Dataset storage
 └── venv/                # Python virtual environment
 ```
@@ -234,14 +263,38 @@ fraudsheild/
 - **Error Handling**: Comprehensive error handling prevents system crashes
 - **Rate Limiting**: Consider implementing rate limiting for production use
 
+## Recent Updates
+
+### Authentication System (v2.0)
+- Complete user registration and login system
+- Supabase integration for user management
+- Session-based authentication with secure password hashing
+- User profile management with avatar upload functionality
+
+### Enhanced UI/UX (v2.1)
+- Cyberpunk-themed design with 3D visual effects
+- Animated background patterns and card hover effects
+- Responsive navigation that adapts to user authentication state
+- Demo mode hidden from logged-in users for cleaner experience
+- Enhanced 3D card animations with glow effects
+
+### Smart Navigation & Enhanced 3D Effects (v2.2)
+- Context-aware navigation (demo options hidden when logged in)
+- Improved user flow between landing, demo, and dashboard pages
+- Better visual feedback for authenticated vs. guest users
+- Enhanced 3D background patterns with proper visibility and layering
+- Improved card hover effects with depth and glow animations
+- Fixed background pattern visibility issues on all pages
+
 ## Future Enhancements
 
-- **Database Integration**: Store transaction history and improve model training
-- **Real-time Learning**: Update model with new fraud patterns
 - **Advanced Analytics**: Dashboard with fraud trends and patterns
-- **API Authentication**: Secure API endpoints for production use
+- **Real-time Learning**: Update model with new fraud patterns
+- **API Authentication**: JWT-based API security for production use
 - **Batch Processing**: Handle multiple transactions simultaneously
 - **Mobile App**: Native mobile application for on-the-go analysis
+- **Advanced Reporting**: Export fraud analysis reports
+- **Team Management**: Multi-user organization support
 
 ## Contributing
 

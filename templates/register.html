@@ -10,6 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -173,8 +177,19 @@
                 <p class="text-gray-400">Start protecting your business today</p>
             </div>
 
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-500/20 border border-red-500 text-red-400{% elif category == 'success' %}bg-green-500/20 border border-green-500 text-green-400{% elif category == 'warning' %}bg-yellow-500/20 border border-yellow-500 text-yellow-400{% else %}bg-blue-500/20 border border-blue-500 text-blue-400{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <!-- Registration Form -->
-            <form onsubmit="handleSubmit(event)" class="space-y-6">
+            <form method="POST" class="space-y-6">
                 <div>
                     <label for="fullName" class="block text-sm font-medium text-gray-300 mb-2">
                         Full Name
@@ -183,6 +198,7 @@
                         <i data-lucide="user" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
                         <input
                             id="fullName"
+                            name="fullName"
                             type="text"
                             class="form-input pl-10"
                             placeholder="Enter your full name"
@@ -199,6 +215,7 @@
                         <i data-lucide="building" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
                         <input
                             id="organization"
+                            name="organization"
                             type="text"
                             class="form-input pl-10"
                             placeholder="Your company name"
@@ -214,6 +231,7 @@
                         <i data-lucide="mail" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
                         <input
                             id="email"
+                            name="email"
                             type="email"
                             class="form-input pl-10"
                             placeholder="Enter your email"
@@ -230,6 +248,7 @@
                         <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
                         <input
                             id="password"
+                            name="password"
                             type="password"
                             class="form-input pl-10 pr-10"
                             placeholder="Create a password"

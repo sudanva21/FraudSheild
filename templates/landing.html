@@ -11,6 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -75,16 +79,39 @@
             text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
         }
 
-        /* Card 3D effect */
+        /* Enhanced 3D Card effect */
         .card-3d {
             transform-style: preserve-3d;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             will-change: transform;
             transform: translateZ(0);
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .card-3d:hover {
-            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(10px);
+            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.15), 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 3D Card Glow Effect */
+        .card-3d::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border-radius: inherit;
+            z-index: -1;
+        }
+
+        .card-3d:hover::after {
+            opacity: 1;
         }
 
         /* Button hover effects */
@@ -127,11 +154,11 @@
             left: 100%;
         }
 
-        /* Background pattern */
+        /* Enhanced 3D Background pattern */
         .cyber-bg {
             background-image: 
-                linear-gradient(rgba(251, 191, 36, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(251, 191, 36, 0.03) 1px, transparent 1px);
+                linear-gradient(rgba(251, 191, 36, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(251, 191, 36, 0.06) 1px, transparent 1px);
             background-size: 50px 50px;
             position: relative;
         }
@@ -143,8 +170,18 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(251, 191, 36, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.04) 0%, transparent 70%);
             pointer-events: none;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            33% { transform: translateX(20px) translateY(-10px); }
+            66% { transform: translateX(-15px) translateY(15px); }
         }
 
         /* Fade in animation */
@@ -193,19 +230,37 @@
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-8">
                 <a href="/" class="text-primary-400 transition-colors">Home</a>
+                {% if not session.logged_in %}
                 <a href="/demo" class="text-gray-300 hover:text-primary-400 transition-colors">Demo</a>
+                {% endif %}
+                {% if session.logged_in %}
+                <a href="/dashboard" class="text-gray-300 hover:text-primary-400 transition-colors">Dashboard</a>
+                <a href="/profile" class="text-gray-300 hover:text-primary-400 transition-colors">Profile</a>
+                {% endif %}
                 <a href="#features" class="text-gray-300 hover:text-primary-400 transition-colors">Features</a>
                 <a href="#about" class="text-gray-300 hover:text-primary-400 transition-colors">About</a>
             </div>
 
             <!-- CTA Buttons -->
             <div class="flex items-center space-x-4">
+                {% if session.logged_in %}
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="h-4 w-4 text-dark-900"></i>
+                    </div>
+                    <span class="text-gray-300">Welcome back!</span>
+                    <a href="/auth/logout" class="text-gray-300 hover:text-primary-400 transition-colors">
+                        Sign Out
+                    </a>
+                </div>
+                {% else %}
                 <a href="/auth/login" class="text-gray-300 hover:text-primary-400 transition-colors">
                     Sign In
                 </a>
                 <a href="/auth/register" class="btn-cyber px-6 py-2 text-dark-900 font-semibold rounded-lg">
                     Get Started
                 </a>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -226,6 +281,7 @@
                 </div>
 
                 <div class="fade-in delay-2 flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                    {% if not session.logged_in %}
                     <a href="/auth/register" class="btn-cyber px-8 py-4 rounded-lg font-semibold text-dark-900 flex items-center space-x-2 hover:scale-105 transition-all duration-300 shadow-3d">
                         <span>Get Started Free</span>
                         <i data-lucide="arrow-right" class="h-5 w-5"></i>
@@ -234,6 +290,12 @@
                         <span>Try Demo</span>
                         <i data-lucide="eye" class="h-5 w-5"></i>
                     </a>
+                    {% else %}
+                    <a href="/dashboard" class="btn-cyber px-8 py-4 rounded-lg font-semibold text-dark-900 flex items-center space-x-2 hover:scale-105 transition-all duration-300 shadow-3d">
+                        <span>Go to Dashboard</span>
+                        <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                    </a>
+                    {% endif %}
                 </div>
 
                 <!-- Stats -->

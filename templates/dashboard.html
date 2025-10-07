@@ -10,6 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -48,18 +52,72 @@
             color: white;
             scroll-behavior: smooth;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* Card 3D effect */
+        /* 3D Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(251, 191, 36, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(251, 191, 36, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* 3D Background Gradient Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Enhanced 3D Card Effect */
         .card-3d {
             transform-style: preserve-3d;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             will-change: transform;
             transform: translateZ(0);
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .card-3d:hover {
-            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(10px);
+            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.15), 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 3D Card Glow Effect */
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border-radius: inherit;
+            z-index: -1;
+        }
+
+        .card-3d:hover::before {
+            opacity: 1;
         }
 
         /* Button hover effects */
@@ -134,7 +192,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-dark-900 text-white">
+<body class="min-h-screen text-white">
     <!-- Navigation -->
     <nav class="relative z-50 p-6 bg-dark-900/90 backdrop-blur-sm border-b border-dark-800">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -151,14 +209,14 @@
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-8">
                 <a href="/" class="text-gray-300 hover:text-primary-400 transition-colors">Home</a>
-                <a href="/demo" class="text-gray-300 hover:text-primary-400 transition-colors">Demo</a>
                 <a href="/dashboard" class="text-primary-400 transition-colors">Dashboard</a>
+                <a href="/profile" class="text-gray-300 hover:text-primary-400 transition-colors">Profile</a>
             </div>
 
             <!-- User Menu -->
             <div class="flex items-center space-x-4">
                 <span class="text-gray-300">Welcome back!</span>
-                <a href="/auth/login" class="text-gray-300 hover:text-primary-400 transition-colors">
+                <a href="/auth/logout" class="text-gray-300 hover:text-primary-400 transition-colors">
                     Sign Out
                 </a>
             </div>

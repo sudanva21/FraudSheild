@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - FraudShield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'dark': {
+                            900: '#0f0f0f',
+                            800: '#1a1a1a',
+                            700: '#2a2a2a',
+                            600: '#3a3a3a',
+                            500: '#4a4a4a',
+                            400: '#6b7280',
+                        },
+                        'primary': {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    boxShadow: {
+                        '3d': '0 20px 40px rgba(251, 191, 36, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f0f;
+            color: white;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* 3D Canvas Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Content overlay */
+        .content-overlay {
+            position: relative;
+            z-index: 1;
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* Glowing text effect */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        /* Card 3D effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateX(-2deg) rotateY(5deg) translateZ(10px);
+        }
+
+        /* Button hover effects */
+        .btn-cyber {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.6);
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(26, 26, 26, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(251, 191, 36, 0.1);
+        }
+
+        /* Profile picture glow */
+        .profile-glow {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* Pulse animation for stats */
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(251, 191, 36, 0.5); }
+        }
+
+        @media (max-width: 768px) {
+            .card-3d:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-dark-900 text-white">
+    <!-- 3D Animated Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Content Overlay -->
+    <div class="content-overlay min-h-screen">
+        <!-- Navigation -->
+        <nav class="relative z-50 p-6 border-b border-dark-800">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 group">
+                    <div class="p-2 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                        <i data-lucide="shield-check" class="h-6 w-6 text-dark-900"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors">
+                        FraudShield
+                    </span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="text-gray-300 hover:text-primary-400 transition-colors">Home</a>
+                    <!-- <a href="/demo" class="text-gray-300 hover:text-primary-400 transition-colors">Demo</a> -->
+                    <a href="/dashboard" class="text-gray-300 hover:text-primary-400 transition-colors">Dashboard</a>
+                    <a href="/profile" class="text-primary-400 transition-colors">Profile</a>
+                </div>
+
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="h-4 w-4 text-dark-900"></i>
+                    </div>
+                    <a href="/auth/logout" class="text-gray-300 hover:text-primary-400 transition-colors">
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="pt-12 pb-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <div class="fade-in mb-12 text-center">
+                    <h1 class="text-5xl font-bold text-white mb-4">
+                        User <span class="text-primary-400 glow-text">Profile</span>
+                    </h1>
+                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                        Manage your account settings and view your fraud detection analytics
+                    </p>
+                </div>
+
+                <!-- Profile Content Grid -->
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Profile Information -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- User Info Card -->
+                        <div class="fade-in delay-1">
+                            <div class="card-3d glass rounded-2xl p-8">
+                                <div class="flex items-start space-x-6">
+                                    <!-- Profile Picture -->
+                                    <div class="relative group">
+                                        <div class="w-24 h-24 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center profile-glow overflow-hidden">
+                                            {% if user.profile_picture %}
+                                                <img src="{{ user.profile_picture }}" alt="Profile" class="w-full h-full object-cover">
+                                            {% else %}
+                                                <i data-lucide="user" class="h-12 w-12 text-dark-900"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-dark-800 flex items-center justify-center">
+                                            <i data-lucide="check" class="h-4 w-4 text-white"></i>
+                                        </div>
+                                        <!-- Upload overlay -->
+                                        <div class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onclick="triggerFileUpload()">
+                                            <i data-lucide="camera" class="h-6 w-6 text-white"></i>
+                                        </div>
+                                        <input type="file" id="profile-picture-input" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
+                                    </div>
+                                    
+                                    <!-- User Details -->
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h2 id="display-name" class="text-2xl font-bold text-white">{{ user.full_name or 'Anonymous User' }}</h2>
+                                            <button onclick="toggleEditMode()" class="text-primary-400 hover:text-primary-300 transition-colors">
+                                                <i data-lucide="edit-2" class="h-5 w-5"></i>
+                                            </button>
+                                        </div>
+                                        <p class="text-primary-400 mb-3">{{ user.organization or 'No Organization' }}</p>
+                                        <p class="text-gray-400 mb-4">
+                                            Fraud detection specialist using advanced AI-powered analytics to protect against financial threats. 
+                                            Member since {{ user.created_at[:10] if user.created_at else '2024' }}.
+                                        </p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span class="px-3 py-1 bg-primary-400/10 text-primary-400 rounded-full text-sm border border-primary-400/20">
+                                                Fraud Detection
+                                            </span>
+                                            <span class="px-3 py-1 bg-primary-400/10 text-primary-400 rounded-full text-sm border border-primary-400/20">
+                                                AI Analytics
+                                            </span>
+                                            <span class="px-3 py-1 bg-primary-400/10 text-primary-400 rounded-full text-sm border border-primary-400/20">
+                                                Risk Assessment
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="fade-in delay-2">
+                            <div class="card-3d glass rounded-2xl p-8">
+                                <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+                                    <i data-lucide="contact" class="h-5 w-5 text-primary-400 mr-2"></i>
+                                    Contact Information
+                                </h3>
+                                
+                                <!-- Display Mode -->
+                                <div id="display-mode" class="grid md:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="mail" class="h-5 w-5 text-primary-400"></i>
+                                            <div>
+                                                <p class="text-gray-400 text-sm">Email</p>
+                                                <p class="text-white">{{ user.email or 'No email provided' }}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="phone" class="h-5 w-5 text-primary-400"></i>
+                                            <div>
+                                                <p class="text-gray-400 text-sm">Phone</p>
+                                                <p id="display-phone" class="text-white">{{ user.phone or 'No phone provided' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-4">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="map-pin" class="h-5 w-5 text-primary-400"></i>
+                                            <div>
+                                                <p class="text-gray-400 text-sm">Location</p>
+                                                <p id="display-location" class="text-white">{{ user.location or 'No location provided' }}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="calendar" class="h-5 w-5 text-primary-400"></i>
+                                            <div>
+                                                <p class="text-gray-400 text-sm">Member Since</p>
+                                                <p class="text-white">{{ user.created_at[:10] if user.created_at else '2024-01-01' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Edit Mode (Hidden by default) -->
+                                <div id="edit-mode" class="hidden">
+                                    <form id="profile-form" class="space-y-6">
+                                        <div class="grid md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                                                <input
+                                                    type="text"
+                                                    name="full_name"
+                                                    id="edit-name"
+                                                    value="{{ user.full_name or '' }}"
+                                                    class="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white focus:ring-primary-400 focus:border-primary-400"
+                                                />
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-300 mb-2">Organization</label>
+                                                <input
+                                                    type="text"
+                                                    name="organization"
+                                                    id="edit-organization"
+                                                    value="{{ user.organization or '' }}"
+                                                    class="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white focus:ring-primary-400 focus:border-primary-400"
+                                                />
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-300 mb-2">Phone</label>
+                                                <input
+                                                    type="text"
+                                                    name="phone"
+                                                    id="edit-phone"
+                                                    value="{{ user.phone or '' }}"
+                                                    class="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white focus:ring-primary-400 focus:border-primary-400"
+                                                />
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-300 mb-2">Location</label>
+                                                <input
+                                                    type="text"
+                                                    name="location"
+                                                    id="edit-location"
+                                                    value="{{ user.location or '' }}"
+                                                    class="w-full px-4 py-2 bg-dark-700 border border-dark-600 rounded-lg text-white focus:ring-primary-400 focus:border-primary-400"
+                                                />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex space-x-4">
+                                            <button
+                                                type="submit"
+                                                class="btn-cyber px-6 py-2 rounded-lg font-semibold text-dark-900 hover:scale-105 transition-all duration-300"
+                                            >
+                                                Save Changes
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onclick="cancelEdit()"
+                                                class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold transition-colors"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Settings -->
+                        <div class="fade-in delay-3">
+                            <div class="card-3d glass rounded-2xl p-8">
+                                <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+                                    <i data-lucide="shield" class="h-5 w-5 text-primary-400 mr-2"></i>
+                                    Security Settings
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 bg-dark-800/50 rounded-lg">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="lock" class="h-5 w-5 text-primary-400"></i>
+                                            <div>
+                                                <p class="text-white font-medium">Two-Factor Authentication</p>
+                                                <p class="text-gray-400 text-sm">Add an extra layer of security</p>
+                                            </div>
+                                        </div>
+                                        <div class="w-12 h-6 bg-primary-400 rounded-full relative cursor-pointer">
+                                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 transition-all"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between p-4 bg-dark-800/50 rounded-lg">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="bell" class="h-5 w-5 text-primary-400"></i>
+                                            <div>
+                                                <p class="text-white font-medium">Security Notifications</p>
+                                                <p class="text-gray-400 text-sm">Get notified of suspicious activity</p>
+                                            </div>
+                                        </div>
+                                        <div class="w-12 h-6 bg-primary-400 rounded-full relative cursor-pointer">
+                                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 transition-all"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="w-full mt-6 btn-cyber py-3 rounded-lg font-semibold text-dark-900 hover:scale-105 transition-all duration-300">
+                                    Change Password
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics & Stats Sidebar -->
+                    <div class="lg:col-span-1 space-y-8">
+                        <!-- Activity Stats -->
+                        <div class="fade-in delay-2">
+                            <div class="card-3d glass rounded-2xl p-6 pulse-glow">
+                                <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
+                                    <i data-lucide="activity" class="h-5 w-5 text-primary-400 mr-2"></i>
+                                    Activity Stats
+                                </h3>
+                                
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400">Transactions Analyzed</span>
+                                        <span class="text-white font-bold">2,847</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400">Fraud Detected</span>
+                                        <span class="text-red-400 font-bold">127</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400">Accuracy Rate</span>
+                                        <span class="text-primary-400 font-bold">94.2%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400">False Positives</span>
+                                        <span class="text-yellow-400 font-bold">23</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="fade-in delay-3">
+                            <div class="card-3d glass rounded-2xl p-6">
+                                <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
+                                    <i data-lucide="clock" class="h-5 w-5 text-primary-400 mr-2"></i>
+                                    Recent Activity
+                                </h3>
+                                
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3 p-3 bg-dark-800/50 rounded-lg">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        <div class="flex-1">
+                                            <p class="text-white text-sm">Transaction cleared</p>
+                                            <p class="text-gray-400 text-xs">2 minutes ago</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center space-x-3 p-3 bg-dark-800/50 rounded-lg">
+                                        <div class="w-2 h-2 bg-red-400 rounded-full"></div>
+                                        <div class="flex-1">
+                                            <p class="text-white text-sm">Fraud detected</p>
+                                            <p class="text-gray-400 text-xs">15 minutes ago</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center space-x-3 p-3 bg-dark-800/50 rounded-lg">
+                                        <div class="w-2 h-2 bg-primary-400 rounded-full"></div>
+                                        <div class="flex-1">
+                                            <p class="text-white text-sm">Model updated</p>
+                                            <p class="text-gray-400 text-xs">1 hour ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="fade-in delay-4">
+                            <div class="card-3d glass rounded-2xl p-6">
+                                <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
+                                    <i data-lucide="zap" class="h-5 w-5 text-primary-400 mr-2"></i>
+                                    Quick Actions
+                                </h3>
+                                
+                                <div class="space-y-3">
+                                    <button class="w-full p-3 text-left bg-dark-800/50 hover:bg-dark-700/50 rounded-lg transition-colors group">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="download" class="h-4 w-4 text-primary-400 group-hover:scale-110 transition-transform"></i>
+                                            <span class="text-white text-sm">Export Report</span>
+                                        </div>
+                                    </button>
+                                    
+                                    <button class="w-full p-3 text-left bg-dark-800/50 hover:bg-dark-700/50 rounded-lg transition-colors group">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="settings" class="h-4 w-4 text-primary-400 group-hover:rotate-180 transition-transform duration-500"></i>
+                                            <span class="text-white text-sm">Model Settings</span>
+                                        </div>
+                                    </button>
+                                    
+                                    <button class="w-full p-3 text-left bg-dark-800/50 hover:bg-dark-700/50 rounded-lg transition-colors group">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="help-circle" class="h-4 w-4 text-primary-400 group-hover:scale-110 transition-transform"></i>
+                                            <span class="text-white text-sm">Help & Support</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialize Lucide icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+
+    <!-- 3D Background Animation Script -->
+    <script>
+        class FraudShield3DBackground {
+            constructor() {
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.particles = [];
+                this.connections = [];
+                this.mouseX = 0;
+                this.mouseY = 0;
+                
+                this.init();
+                this.animate();
+                this.handleResize();
+                this.handleMouseMove();
+                
+                // Mark as initialized
+                window.backgroundInitialized = true;
+            }
+
+            init() {
+                // Scene setup
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer({
+                    canvas: document.getElementById('bg-canvas'),
+                    antialias: true,
+                    alpha: true
+                });
+                
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                
+                // Create particle system
+                this.createParticles();
+                this.createConnections();
+                
+                // Position camera
+                this.camera.position.z = 50;
+            }
+
+            createParticles() {
+                const particleCount = 150;
+                const particleGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+                
+                for (let i = 0; i < particleCount; i++) {
+                    // Create particle with glowing material
+                    const particleMaterial = new THREE.MeshBasicMaterial({
+                        color: Math.random() > 0.3 ? 0xfbbf24 : 0xf59e0b,
+                        transparent: true,
+                        opacity: Math.random() * 0.6 + 0.4
+                    });
+                    
+                    const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+                    
+                    // Random position
+                    particle.position.x = (Math.random() - 0.5) * 100;
+                    particle.position.y = (Math.random() - 0.5) * 100;
+                    particle.position.z = (Math.random() - 0.5) * 100;
+                    
+                    // Random velocity
+                    particle.velocity = {
+                        x: (Math.random() - 0.5) * 0.02,
+                        y: (Math.random() - 0.5) * 0.02,
+                        z: (Math.random() - 0.5) * 0.02
+                    };
+                    
+                    // Pulse properties
+                    particle.pulseSpeed = Math.random() * 0.02 + 0.01;
+                    particle.pulseOffset = Math.random() * Math.PI * 2;
+                    
+                    this.particles.push(particle);
+                    this.scene.add(particle);
+                }
+            }
+
+            createConnections() {
+                const connectionCount = 80;
+                
+                for (let i = 0; i < connectionCount; i++) {
+                    const geometry = new THREE.BufferGeometry();
+                    const positions = new Float32Array(6); // 2 vertices * 3 coordinates
+                    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                    
+                    const material = new THREE.LineBasicMaterial({
+                        color: 0xfbbf24,
+                        transparent: true,
+                        opacity: 0.2
+                    });
+                    
+                    const line = new THREE.Line(geometry, material);
+                    this.connections.push(line);
+                    this.scene.add(line);
+                }
+            }
+
+            updateConnections() {
+                const maxDistance = 15;
+                let connectionIndex = 0;
+                
+                for (let i = 0; i < this.particles.length && connectionIndex < this.connections.length; i++) {
+                    for (let j = i + 1; j < this.particles.length && connectionIndex < this.connections.length; j++) {
+                        const distance = this.particles[i].position.distanceTo(this.particles[j].position);
+                        
+                        if (distance < maxDistance) {
+                            const line = this.connections[connectionIndex];
+                            const positions = line.geometry.attributes.position.array;
+                            
+                            positions[0] = this.particles[i].position.x;
+                            positions[1] = this.particles[i].position.y;
+                            positions[2] = this.particles[i].position.z;
+                            positions[3] = this.particles[j].position.x;
+                            positions[4] = this.particles[j].position.y;
+                            positions[5] = this.particles[j].position.z;
+                            
+                            line.geometry.attributes.position.needsUpdate = true;
+                            line.material.opacity = (1 - distance / maxDistance) * 0.3;
+                            
+                            connectionIndex++;
+                        }
+                    }
+                }
+                
+                // Hide unused connections
+                for (let i = connectionIndex; i < this.connections.length; i++) {
+                    this.connections[i].material.opacity = 0;
+                }
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                const time = Date.now() * 0.001;
+                
+                // Animate particles
+                this.particles.forEach((particle, index) => {
+                    // Update position
+                    particle.position.x += particle.velocity.x;
+                    particle.position.y += particle.velocity.y;
+                    particle.position.z += particle.velocity.z;
+                    
+                    // Boundary checking
+                    if (Math.abs(particle.position.x) > 50) particle.velocity.x *= -1;
+                    if (Math.abs(particle.position.y) > 50) particle.velocity.y *= -1;
+                    if (Math.abs(particle.position.z) > 50) particle.velocity.z *= -1;
+                    
+                    // Pulsing effect
+                    const pulse = Math.sin(time * particle.pulseSpeed + particle.pulseOffset) * 0.3 + 0.7;
+                    particle.material.opacity = pulse * 0.8;
+                    particle.scale.setScalar(pulse * 2 + 1);
+                    
+                    // Mouse interaction
+                    const mouseInfluence = 0.0001;
+                    particle.position.x += this.mouseX * mouseInfluence;
+                    particle.position.y -= this.mouseY * mouseInfluence;
+                });
+                
+                // Update connections
+                this.updateConnections();
+                
+                // Camera movement
+                this.camera.position.x += (this.mouseX * 0.01 - this.camera.position.x) * 0.05;
+                this.camera.position.y += (-this.mouseY * 0.01 - this.camera.position.y) * 0.05;
+                this.camera.lookAt(this.scene.position);
+                
+                // Render
+                this.renderer.render(this.scene, this.camera);
+            }
+
+            handleResize() {
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            handleMouseMove() {
+                document.addEventListener('mousemove', (event) => {
+                    this.mouseX = (event.clientX - window.innerWidth / 2) / 100;
+                    this.mouseY = (event.clientY - window.innerHeight / 2) / 100;
+                });
+            }
+        }
+
+        // Initialize 3D background when page loads
+        function initBackground() {
+            try {
+                if (typeof THREE !== 'undefined') {
+                    console.log('Initializing 3D background...');
+                    new FraudShield3DBackground();
+                } else {
+                    console.warn('Three.js not loaded, retrying...');
+                    setTimeout(initBackground, 200);
+                }
+            } catch (error) {
+                console.error('Error initializing 3D background:', error);
+                // Hide canvas if initialization fails
+                const canvas = document.getElementById('bg-canvas');
+                if (canvas) canvas.style.display = 'none';
+            }
+        }
+
+        // Start initialization when DOM is ready
+        document.addEventListener('DOMContentLoaded', initBackground);
+
+        // Also try after window load as backup
+        window.addEventListener('load', () => {
+            if (!window.backgroundInitialized) {
+                initBackground();
+            }
+        });
+
+        // Profile editing functionality
+        function toggleEditMode() {
+            const displayMode = document.getElementById('display-mode');
+            const editMode = document.getElementById('edit-mode');
+            
+            if (displayMode.classList.contains('hidden')) {
+                // Switch back to display mode
+                displayMode.classList.remove('hidden');
+                editMode.classList.add('hidden');
+            } else {
+                // Switch to edit mode
+                displayMode.classList.add('hidden');
+                editMode.classList.remove('hidden');
+            }
+        }
+
+        function cancelEdit() {
+            const displayMode = document.getElementById('display-mode');
+            const editMode = document.getElementById('edit-mode');
+            
+            displayMode.classList.remove('hidden');
+            editMode.classList.add('hidden');
+        }
+
+        // Profile form submission
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileForm = document.getElementById('profile-form');
+            if (profileForm) {
+                profileForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(profileForm);
+                    
+                    try {
+                        const response = await fetch('/api/profile/update', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Update display with new values
+                            document.getElementById('display-name').textContent = formData.get('full_name') || 'Anonymous User';
+                            document.getElementById('display-phone').textContent = formData.get('phone') || 'No phone provided';
+                            document.getElementById('display-location').textContent = formData.get('location') || 'No location provided';
+                            
+                            // Show success message
+                            showNotification('Profile updated successfully!', 'success');
+                            
+                            // Switch back to display mode
+                            cancelEdit();
+                        } else {
+                            showNotification(result.message || 'Failed to update profile', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error updating profile:', error);
+                        showNotification('An error occurred while updating profile', 'error');
+                    }
+                });
+            }
+        });
+
+        // Profile picture upload functionality
+        function triggerFileUpload() {
+            document.getElementById('profile-picture-input').click();
+        }
+
+        async function uploadProfilePicture(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/profile/upload-avatar', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update the profile picture display
+                    const profilePicContainer = document.querySelector('.profile-glow');
+                    profilePicContainer.innerHTML = `<img src="${result.profile_picture_url}" alt="Profile" class="w-full h-full object-cover">`;
+                    
+                    showNotification('Profile picture updated successfully!', 'success');
+                } else {
+                    showNotification(result.message || 'Failed to upload profile picture', 'error');
+                }
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                showNotification('An error occurred while uploading', 'error');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg max-w-sm z-50 ${
+                type === 'success' ? 'bg-green-500/20 border border-green-500 text-green-400' :
+                type === 'error' ? 'bg-red-500/20 border border-red-500 text-red-400' :
+                'bg-blue-500/20 border border-blue-500 text-blue-400'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Fade in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Toggle switches functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggles = document.querySelectorAll('.w-12.h-6.bg-primary-400');
+            
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const dot = this.querySelector('div');
+                    if (dot.classList.contains('right-0.5')) {
+                        dot.classList.remove('right-0.5');
+                        dot.classList.add('left-0.5');
+                        this.classList.remove('bg-primary-400');
+                        this.classList.add('bg-gray-600');
+                    } else {
+                        dot.classList.remove('left-0.5');
+                        dot.classList.add('right-0.5');
+                        this.classList.remove('bg-gray-600');
+                        this.classList.add('bg-primary-400');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
