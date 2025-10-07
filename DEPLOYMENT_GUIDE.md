@@ -117,12 +117,23 @@ This guide will help you deploy your FraudShield application to Render.
    - Ensure requirements.txt includes all dependencies
    - Verify Python version compatibility
 
-2. **Startup Issues:**
+2. **Scikit-learn Build Errors (Cython compilation failures):**
+   - This occurs when trying to build scikit-learn from source
+   - **Solution:** Use the updated requirements.txt with compatible versions
+   - **Alternative:** Add `--only-binary=all` flag to pip install command
+   - Ensure Python version in runtime.txt has pre-built wheels available
+
+3. **Python Version Issues:**
+   - If you see Python 3.13+ in logs but specified 3.12 in runtime.txt
+   - **Solution:** Update runtime.txt to use Python 3.12.3 (has better package compatibility)
+   - Very new Python versions may not have pre-built wheels for all packages
+
+4. **Startup Issues:**
    - Check the deployment logs
    - Verify environment variables are set correctly
    - Ensure the start command is correct
 
-3. **Database Connection:**
+5. **Database Connection:**
    - Verify Supabase credentials are correct
    - Check Supabase project status
    - App will fall back to demo mode if database fails
